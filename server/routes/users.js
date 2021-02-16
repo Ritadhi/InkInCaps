@@ -88,13 +88,6 @@ router.post('/photo', upload.single('photo'), (req, res, next) => {
       student.save(function () { });
       return;
     })
-    //Check
-    // req.body.photo = req.file.filename;
-    // Student.findOne({ _id: req.body.id }, (err, student) => {
-    //   student.photo = req.body.photo;
-    //   student.save(function () { });
-    //   return;
-    // });
   }
   return;
 })
