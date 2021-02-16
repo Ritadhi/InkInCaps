@@ -29,9 +29,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/addLeader', isAuthorized, (req, res, next) => {
-  console.log(req.body)
   var leader = new Leader({email: req.body.email, name: req.body.name, time: req.body.time, level: req.body.level});
-  console.log(leader)
   return leader.save(function() {});
 })
 
