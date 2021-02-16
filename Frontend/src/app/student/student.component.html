@@ -1,0 +1,149 @@
+<fieldset class="scheduler-border my-5 mx-5 px-3 py-3">
+    <legend class="scheduler-border">Enter Details</legend>
+    <div class="row" [formGroup]="userForm">
+        <div class="col-6">
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Student's Name</label>
+                <div class="col-8">
+                    <input formControlName="studentName" type="text" class="form-control-plaintext" placeholder="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Father's Name</label>
+                <div class="col-8">
+                    <input formControlName="fatherName" type="text" class="form-control-plaintext" placeholder="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Date of Birth</label>
+                <div class="col-8">
+                    <input formControlName="dob" type="date" class="form-control-plaintext" placeholder="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Gender</label>
+                <div class="col-8 mt-2">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="gender" value="female">
+                        <label class="form-check-label">Female</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="gender" value="male">
+                        <label class="form-check-label">Male</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Course Applied</label>
+                <div class="col-8">
+                    <select class="form-select form-control-plaintext" formControlName="course"
+                        style="border: solid black 1px; font-weight: 450; width: 100%;">
+                        <option disabled selected value=""> -- select an option -- </option>
+                        <option value="Diploma">Diploma</option>
+                        <option value="Bachelor">Bachelor</option>
+                        <option value="Master">Master</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Mobile Number</label>
+                <div class="col-8">
+                    <input type="number" formControlName="mobile" class="form-control-plaintext" placeholder="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Email ID</label>
+                <div class="col-8">
+                    <input type="email" formControlName="email" class="form-control-plaintext" placeholder="">
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div style="text-align: center;">
+                <div
+                    style="width: 175px; height: 175px; border: black 1px solid; margin-left: auto; margin-right: auto;">
+                    <img [src]="url" *ngIf="fileSelect && imgs" style="width: 175px; height: 175px;" alt="">
+                    <h6 class="mt-5" *ngIf="fileSelect && !imgs" style="color: #e84b63;">*only images of size less
+                        than 250kb are
+                        allowed</h6>
+                </div>
+                <label class="mt-3 p-2" type="button"
+                    style="border: black 2px solid; border-bottom: 3px solid black; border-right: solid black 3px;"
+                    for="upload-photo">Upload Image...</label>
+                <input type="file" (change)="onFileSelected($event)"
+                    style="opacity: 0; z-index: -1; position: absolute;" id="upload-photo" />
+            </div>
+            <div class="form-group">
+                <label class="ml-3 col-form-label">Address</label>
+                <div class="col-12">
+                    <textarea type="text" formControlName="address" class="form-control-plaintext" rows="2"
+                        style="border: solid black 1px;" placeholder=""></textarea>
+                </div>
+            </div>
+            <div style="text-align: end;">
+                <button class="mr-3 px-2" (click)=submit()
+                    style="background-color: lightgreen; width: 75px; border: lightgreen 2px solid; border-bottom: 3px solid black; border-right: solid black 3px;"><u>S</u>ubmit</button>
+                <button class="mr-3 px-2" (click)=reset()
+                    style="background-color: lightcoral; width: 75px; border: lightcoral 2px solid; border-bottom: 3px solid black; border-right: solid black 3px;"><u>R</u>eset</button>
+            </div>
+        </div>
+    </div>
+    <div class="text-danger" style="text-align: center;">
+        {{message}}
+    </div>
+</fieldset>
+
+<fieldset class="scheduler-border mb-5 mx-5 px-3 py-3">
+    <legend class="scheduler-border">Database</legend>
+    <div style="text-align: start;">
+        <button class="mr-3 px-2" (click)=edit()
+            style="background-color: lightpink; width: 75px; border: lightpink 2px solid; border-bottom: 3px solid black; border-right: solid black 3px;"><u>E</u>dit</button>
+        <button class="mr-3 px-2" (click)=delete();
+            style="background-color: mediumpurple; width: 75px; border: mediumpurple 2px solid; border-bottom: 3px solid black; border-right: solid black 3px;"><u>D</u>elete</button>
+    </div>
+    <table class="mt-4" style="width:100%">
+        <tr>
+            <th>S. No.</th>
+            <th>Student's Name</th>
+            <th>Father's Name</th>
+            <th>DOB</th>
+            <th>Gender</th>
+            <th>Course</th>
+            <th>Mobile Number</th>
+            <th>Submitted On</th>
+        </tr>
+        <tr *ngFor="let student of studentDetails; let i = index">
+            <td style="text-align: right;"><input class="form-check-input" type="radio" [(ngModel)]="studentIndex" value="{{i}}">{{student.student_id}}</td>
+            <td>{{student.studentName}}</td>
+            <td>{{student.fatherName}}</td>
+            <td>{{student.dob | date: 'dd-MMM-yyyy'}}</td>
+            <td>{{student.gender}}</td>
+            <td>{{student.course}}</td>
+            <td>{{student.mobile}}</td>
+            <td>{{student.createdAt | date: 'dd-MMM-yyyy hh:mm'}}</td>
+        </tr>
+    </table>
+    <div class="mt-3" style="width: 100%;">
+            <div style="width: fit-content; margin-left: auto; margin-right: auto;">
+                <nav aria-label="Page navigation example" *ngIf="count > 0">
+                    <ul class="pagination">
+                        <li class="page-item" type="button">
+                            <a class="page-link" aria-label="Previous" (click)=prev()>
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item" *ngFor="let page of [].constructor(pageNo); let i = index;" type="button"><a (click)=setStudentNo(i+1) *ngIf="currentPage!=i+1" class="page-link">{{i+1}}</a>
+                            <a class="page-link bg-primary" *ngIf="currentPage==i+1" style="color: white; font-weight: bolder;">{{i+1}}</a>
+                        </li>
+                        
+                        <li class="page-item" type="button">
+                            <a class="page-link" aria-label="Next" (click)=next()>
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+</fieldset>

@@ -1,0 +1,9 @@
+<div class="m-5 p-5 row">
+    <input class="form-control" style="width: 93%;" [(ngModel)]="check" type="text">
+    <div class="ml-auto">
+        <button class="btn btn-primary" (click)=checkPrime()>Check</button>
+    </div>
+    <div class="mt-5" *ngIf="output">
+        <p *ngFor="let out of output;"><b>{{out}}</b></p>
+    </div>
+</div>

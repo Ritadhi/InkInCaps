@@ -1,0 +1,160 @@
+<div class="m-5 col-12">
+  <div class="row mx-5 my-3 px-3">
+    <span style="font-weight: bold;">Difficulty Level &nbsp;</span>
+    <select class="form-select" [disabled]="newGame" [(ngModel)]="level" style="border: none; font-size: 14px;">
+      <option selected value="4">Easy</option>
+      <option value="3">Medium</option>
+      <option value="2">Hard</option>
+      <option value="1">Expert</option>
+    </select>
+    <span class="mx-auto">{{ min}}:{{sec }} &nbsp;<i class="fa fa-pause-circle-o" aria-hidden="true"></i></span>
+  </div>
+  <div class="row mx-5">
+    <div class="col-5 mx-0">
+      <table *ngIf="!newGame">
+        <caption></caption>
+        <colgroup>
+          <col>
+          <col>
+          <col>
+        </colgroup>
+        <colgroup>
+          <col>
+          <col>
+          <col>
+        </colgroup>
+        <colgroup>
+          <col>
+          <col>
+          <col>
+        </colgroup>
+        <tbody *ngFor="let cell of [].constructor(3); let x = index;">
+          <tr *ngFor="let cell of [].constructor(3); let i = index;">
+            <td *ngFor="let cell of [].constructor(9); let j = index;"><input></td>
+          </tr>
+        </tbody>
+      </table>
+      <table *ngIf="newGame && !timerStop">
+        <caption></caption>
+        <colgroup>
+          <col>
+          <col>
+          <col>
+        </colgroup>
+        <colgroup>
+          <col>
+          <col>
+          <col>
+        </colgroup>
+        <colgroup>
+          <col>
+          <col>
+          <col>
+        </colgroup>
+        <tbody *ngFor="let cell of [].constructor(3); let x = index;">
+          <tr *ngFor="let cell of [].constructor(3); let i = index;">
+            <td *ngFor="let cell of [].constructor(9); let j = index;"><input id="cell_{{i+(3*x)}}_{{j}}"
+                [readonly]="boardSetup[i+(3*x)][j]==1" *ngIf="setNull(i+(3*x),j)" type="number"
+                [(ngModel)]="initialgame[i+(3*x)][j]" (ngModelChange)=setNewMove($event,i+(3*x),j)
+                on-focus="onFocus(i+(3*x),j)"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf='timerStop'>
+        <div class="px-auto pt-5"
+          style="background-image: url(./assets/img/winMessage.jpg); background-size: cover; height: 22.5em; width: 22.5em;">
+          <div class="mx-auto mt-5" style="width: fit-content; height: fit-content;">
+            <h5 style="color: white;"><b><i class="fa fa-clock-o" aria-hidden="true"></i>&nbsp; {{ min}}:{{sec }}</b>
+            </h5>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <button class="btn" (click)="restart()">New Game</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-5 mx-0">
+      <div class="btn">
+        <button class="btn btn-primary btn-lg" style="width: 150%;" *ngIf="!newGame" (click)=startGame()>New
+          Game</button>
+        <button class="btn btn-primary btn-lg" style="width: 130%;" *ngIf="newGame" [disabled]="timerStop" (click)=submit()>Submit
+          Game</button>
+      </div>
+      <br>
+      <div class="btn">
+        <button class="btn btn-warning btn-lg" style="width: 130%; color: white;" (click)=fetchLeaderBoard()>
+          Leader Board</button>
+      </div>
+      <br>
+      <div class="mx-3 mt-3">
+        <table>
+          <tbody style="border:none">
+            <tr>
+              <td colspan="2" (click)=get(1) style="width: 4rem;">1</td>
+              <td colspan="2" (click)=get(2) style="width: 4rem;">2</td>
+              <td colspan="2" (click)=get(3) style="width: 4rem;">3</td>
+            </tr>
+            <tr>
+              <td colspan="2" (click)=get(4)>4</td>
+              <td colspan="2" (click)=get(5)>5</td>
+              <td colspan="2" (click)=get(6)>6</td>
+            </tr>
+            <tr>
+              <td colspan="2" (click)=get(7)>7</td>
+              <td colspan="2" (click)=get(8)>8</td>
+              <td colspan="2" (click)=get(9)>9</td>
+            </tr>
+            <tr>
+              <td style="color: black;" colspan="3"><i class="fa fa-pencil" aria-hidden="true"></i><br>Notes</td>
+              <td style="color: black;" colspan="3" (click)=hint()><i class="fa fa-lightbulb-o"
+                  aria-hidden="true"></i><br>Hint</td>
+            </tr>
+            <tr>
+              <td style="color: black;" colspan="3" (click)=undo()><i class="fa fa-undo" aria-hidden="true"></i><br>Undo
+              </td>
+              <td style="color: black;" colspan="3" (click)=erase()><i class="fa fa-eraser"
+                  aria-hidden="true"></i><br>Erase</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <table class="mt-4" *ngIf="leaderBoard.length>0" style="width:80%">
+    <tr>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Time</th>
+    </tr>
+    <tr *ngFor="let leader of leaderBoard; let i = index">
+      <td *ngIf="i%2==1" style="border: none; color: black;">{{i+1}}</td>
+      <td *ngIf="i%2==1" style="border: none; color: black;">{{leader.name}}</td>
+      <td *ngIf="i%2==1" style="border: none; color: black;">{{leader.email}}</td>
+      <td *ngIf="i%2==1" style="border: none; color: black;">{{getTime(leader.time)}}</td>
+      <td *ngIf="i%2==0" class="bg-info" style="border: none; color: black;">{{i+1}}</td>
+      <td *ngIf="i%2==0" class="bg-info" style="border: none; color: black;">{{leader.name}}</td>
+      <td *ngIf="i%2==0" class="bg-info" style="border: none; color: black;">{{leader.email}}</td>
+      <td *ngIf="i%2==0" class="bg-info" style="border: none; color: black;">{{getTime(leader.time)}}</td>
+  </tr>
+</table>
+</div>
+
+<div class="modal fade" id="myModal" role="dialog" data-backdrop="static" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body" [formGroup]="leaderForm">
+        <label>Name</label>
+        <input class="form-control-plaintext" type="text" formControlName="name">
+        <label>Email</label>
+        <input class="form-control-plaintext" type="email" formControlName="email">
+        <div style="text-align: end;">
+          <button type="button" data-dismiss="modal" (click)=saveLeader() [disabled]="!leaderForm.valid" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
